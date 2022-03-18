@@ -1,0 +1,1 @@
+image ID: 35, neighbors:  3 5 6
