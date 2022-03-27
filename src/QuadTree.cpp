@@ -36,7 +36,7 @@ class QuadTree
   QuadTree(bpPoint aTopLeft, bpPoint aBottomRight, int aMaxPoints);
   virtual ~QuadTree() {};
 
-  void PrintTree(std::string aSpacing);
+  void PrintTree(std::string aSpacing, int aDepth);
   void Insert(const bpPoint& aPoint);
   bool IsIn(const bpPoint& aPoint) const;
   std::list<bpPoint> FindInRadius(const bpPoint& aPoint, float& aRadius) const;
@@ -44,20 +44,20 @@ class QuadTree
 };
 
 
-void QuadTree::PrintTree(std::string aSpacing = ""){
+void QuadTree::PrintTree(std::string aSpacing = "", int aDepth = 0){
   if(mIsLeaf){
     std::cout << aSpacing << "Leaf: " << mPoints.size() << " points" << std::endl;
     std::cout << aSpacing << "TopLeft: " << mTopLeft.GetX() << " " << mTopLeft.GetY() << std::endl;
   }
   else{
-    std::cout << aSpacing << "Top Left" << std::endl;
-    mTopLeftChild->PrintTree( aSpacing + "  ");
-    std::cout << aSpacing << "Top Right" << std::endl;
-    mTopRightChild->PrintTree( aSpacing + "  ");
-    std::cout << aSpacing << "Bottom Left" << std::endl;
-    mBottomLeftChild->PrintTree( aSpacing + "  ");
-    std::cout << aSpacing << "Bottom Right" << std::endl;
-    mBottomRightChild->PrintTree( aSpacing + "  ");
+    std::cout << aSpacing << ++aDepth << "-Top Left" << std::endl;
+    mTopLeftChild->PrintTree( aSpacing + "  ", aDepth);
+    std::cout << aSpacing << aDepth << "-Top Right" << std::endl;
+    mTopRightChild->PrintTree( aSpacing + "  ", aDepth);
+    std::cout << aSpacing << aDepth << "-Bottom Left" << std::endl;
+    mBottomLeftChild->PrintTree( aSpacing + "  ", aDepth);
+    std::cout << aSpacing << aDepth << "-Bottom Right" << std::endl;
+    mBottomRightChild->PrintTree( aSpacing + "  ", aDepth);
   }
 }
 
@@ -128,13 +128,19 @@ void QuadTree::Insert(const bpPoint& aPoint)
 std::list<bpPoint> QuadTree::FindInRadius(const bpPoint& aPoint, float& aRadius) const{
   std::list<bpPoint> pointsInRadius;
   if(!IsIn(aPoint)){
-    return pointsInRadius;
+    if (
+        !IsIn(bpPoint(aPoint.GetX() - aRadius, aPoint.GetY() - aRadius)) &&
+        !IsIn(bpPoint(aPoint.GetX() + aRadius, aPoint.GetY() + aRadius)) &&
+        !IsIn(bpPoint(aPoint.GetX() - aRadius, aPoint.GetY() + aRadius)) &&
+        !IsIn(bpPoint(aPoint.GetX() + aRadius, aPoint.GetY() - aRadius))){
+      return pointsInRadius;
+    }
   }
 
   if(mIsLeaf){
-    for(auto point : mPoints){
-      if(point.DistanceTo(aPoint) <= aRadius){
-        pointsInRadius.push_back(point);
+    for(auto vPoint : mPoints){
+      if(vPoint.DistanceTo(aPoint) <= aRadius){
+        pointsInRadius.push_back(vPoint);
       }
     }
   }
@@ -202,21 +208,11 @@ int main() {
     for (auto vPointB : vPointListImageB)
     {
 
-      std::cout << "Point: " << vPointB.GetId() <<  vPointB.GetX() << " " << vPointB.GetY() << std::endl;
+      //std::cout << "Point: " << vPointB.GetId() << " " <<  vPointB.GetX() << " " << vPointB.GetY() << std::endl;
       for ( auto vPointA : vQuadTreeImage.FindInRadius(vPointB, vRadius))
       {
         vSolutionIds[vPointB.GetId()].push_back(vPointA.GetId());
       }
-    }
-
-
-    // Example: ID 35 has neighboring IDs 3, 5, 6.
-    {
-        std::list<int> vNeighbors;
-        vNeighbors.push_back(3);
-        vNeighbors.push_back(5);
-        vNeighbors.push_back(6);
-        vSolutionIds.insert(std::pair<int, std::list<int> >(35, vNeighbors));
     }
 
     bpWriteSolution("data/Solution.txt", vSolutionIds);
