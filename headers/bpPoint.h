@@ -2,7 +2,7 @@
 #define __BP_POINT_H__
 
 #include <iostream>
-
+#include <cmath>
 
 class bpPoint
 {
@@ -21,6 +21,7 @@ public:
   const int& GetId() const;
   const int& GetX() const;
   const int& GetY() const;
+  const float DistanceTo(const bpPoint& aPoint);
 
 private:
   int mId = 0;

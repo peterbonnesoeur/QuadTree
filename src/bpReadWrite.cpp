@@ -18,13 +18,22 @@ void bpReadPoints(
   }
 }
 
+int bpReadSimpleFile(const std::string& aFilePath)
+{
+  std::ifstream vFileStream(aFilePath.c_str());
+  int vNumber;
+  vFileStream >> vNumber;
+  return vNumber;
+}
 
 int bpReadRadius(const std::string& aRadiusPath)
 {
-  std::ifstream vRadiusFileStream(aRadiusPath.c_str());
-  int vRadius;
-  vRadiusFileStream >> vRadius;
-  return vRadius;
+  return bpReadSimpleFile(aRadiusPath);
+}
+
+int bpReadMaxPoints(const std::string& aMaxPointsPath)
+{
+  return bpReadSimpleFile(aMaxPointsPath);
 }
 
 

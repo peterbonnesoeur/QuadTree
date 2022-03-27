@@ -33,6 +33,10 @@ const int& bpPoint::GetY() const
   return mY;
 }
 
+const float bpPoint::DistanceTo(const bpPoint& aPoint){
+  return sqrt(pow(mX - aPoint.GetX(), 2) + pow(mY - aPoint.GetY(), 2));
+}
+
 
 std::ostream& operator << (
   std::ostream& aOut,

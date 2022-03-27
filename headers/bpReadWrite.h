@@ -15,6 +15,8 @@ void bpReadPoints(
 
 int bpReadRadius(const std::string& aRadiusPath);
 
+int bpReadMaxPoints(const std::string& aMaxPointsPath);
+
 void bpWriteSolution(
   const std::string& aSolutionFilePath,
   const std::map<int, std::list<int> >& aSolutionMap);
