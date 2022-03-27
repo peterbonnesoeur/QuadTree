@@ -50,7 +50,7 @@ QuadTree::QuadTree(bpPoint aTopLeft, bpPoint aBottomRight, int aMaxPoints) : mTo
     mPoints = std::list<bpPoint>();
 
 }
-/*
+
 QuadTree::insert(bpPoint aPoint)
 {
 
@@ -59,7 +59,7 @@ QuadTree::insert(bpPoint aPoint)
         return;
     }
 
-    if(isIn(aPoint) && mPoints.size() < 1)
+    if(isIn(aPoint) && mPoints.size() < mMaxPoints)
     {
         mPoints.push_back(aPoint);
         return;
